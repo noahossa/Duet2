@@ -1,6 +1,7 @@
 # Duet2
 Repository for custom Duet configuration files and scripts
 
+![](https://imgur.com/a/rnS9JUQ)
 ## Workflow
 * Make csv file
 * apply function args
