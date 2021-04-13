@@ -43,3 +43,4 @@ Python scripts and examples for generating GCode according to
 * [Calculators for belts for Stepper Motors](https://blog.prusaprinters.org/calculator_3416/)
 * [CSV Docs](https://docs.python.org/3/library/csv.html)
 * [CSV Use](https://stackoverflow.com/questions/57406217/how-to-pass-csv-file-as-an-argument-to-python-file)
+* [argparse](https://prod.liveshare.vsengsaas.visualstudio.com/join?6DCFD36A06689E096F402D0AF10C7EC8E8DD)
