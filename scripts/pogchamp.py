@@ -20,6 +20,6 @@ g.move(y=5)
 g.home()  # move the tool head to the origin (0, 0)
 
 
-pyperclip.copy(str(g))
+# pyperclip.copy(str(g))
 
-g.view()
+# g.view()
