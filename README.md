@@ -5,6 +5,7 @@ Repository for custom Duet configuration files and scripts
 
 ## Workflow
 * Make csv file
+    * Important Note: When creating a csv file, ensure that it is only CSV (Comma Delimited) as other encoding formats prepend data on the front of data
 * apply function args
 * export gcode to clipboard and past in text doc, save as gcode file and upload to [Duet Web Control (DWC)](https://duet3d.dozuki.com/Wiki/Duet_Web_Control_Manual), jobs tab
 * export dry run gcode and test
