@@ -7,7 +7,6 @@ Repository for custom Duet configuration files and scripts
 * export gcode to clipboard and past in text doc, save as gcode file and upload to [Duet Web Control (DWC)](https://duet3d.dozuki.com/Wiki/Duet_Web_Control_Manual), jobs tab
 * export dry run gcode and test
 * export drill run of gcode and run
-* celebrate by re-watching GATE. I will never forgive the Japanese... NANI
 ### Inputs
 * will we have a UI? 
 * cross section shape
