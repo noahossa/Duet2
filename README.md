@@ -1,7 +1,7 @@
 # Duet2
 Repository for custom Duet configuration files and scripts
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="LdKgD7n"><a href="https://imgur.com/LdKgD7n">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/rnS9JUQ"  ><a href="//imgur.com/a/rnS9JUQ">Tube_CNC_Axis</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 
 ## Workflow
 * Make csv file
