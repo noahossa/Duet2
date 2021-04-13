@@ -1,7 +1,7 @@
 # Duet2
 Repository for custom Duet configuration files and scripts
 
-[image](https://imgur.com/a/rnS9JUQ)
+<a href="https://ibb.co/68RzfXk"><img src="https://i.ibb.co/68RzfXk/LdKgD7n.png" alt="LdKgD7n" border="0"></a>
 
 ## Workflow
 * Make csv file
