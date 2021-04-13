@@ -1,7 +1,8 @@
 import csv
 import argparse
 
-with open('eggs.csv', newline='') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+with open('test.csv') as csvfile:
+    spamreader = csv.reader(csvfile)
+    print(spamreader)
     for row in spamreader:
         print(', '.join(row))
