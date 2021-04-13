@@ -39,7 +39,7 @@ Python scripts and examples for generating GCode according to
 
 
 ## References
-[G code Dictionary](https://duet3d.dozuki.com/Wiki/Gcode#Section_G_Code_Structure)
-[Calculators for belts for Stepper Motors](https://blog.prusaprinters.org/calculator_3416/)
-[CSV Docs](https://docs.python.org/3/library/csv.html)
-[CSV Use](https://stackoverflow.com/questions/57406217/how-to-pass-csv-file-as-an-argument-to-python-file)
+* [G code Dictionary](https://duet3d.dozuki.com/Wiki/Gcode#Section_G_Code_Structure)
+* [Calculators for belts for Stepper Motors](https://blog.prusaprinters.org/calculator_3416/)
+* [CSV Docs](https://docs.python.org/3/library/csv.html)
+* [CSV Use](https://stackoverflow.com/questions/57406217/how-to-pass-csv-file-as-an-argument-to-python-file)
