@@ -45,3 +45,20 @@ Python scripts and examples for generating GCode according to
 * [CSV Docs](https://docs.python.org/3/library/csv.html)
 * [CSV Use](https://stackoverflow.com/questions/57406217/how-to-pass-csv-file-as-an-argument-to-python-file)
 * [argparse](https://prod.liveshare.vsengsaas.visualstudio.com/join?6DCFD36A06689E096F402D0AF10C7EC8E8DD)
+
+## Steps
+
+Install [pandas](https://pandas.pydata.org/)
+'''bash
+pip install pandas
+'''
+
+Install [numpy/matplotlib](https://numpy.org/install/) and reference [tutorial](https://realpython.com/numpy-tutorial/)
+''''bash
+pip install numpy matplotlib
+''''
+
+Install [pyperclip](https://pypi.org/project/pyperclip/)
+'''bash
+pip install pyperclip
+'''

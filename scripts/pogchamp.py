@@ -1,4 +1,4 @@
-#import pyperclip
+#!/usr/bin/env python
 import mecode
 import csv
 
@@ -23,4 +23,4 @@ g.home()  # move the tool head to the origin (0, 0)
 
 # pyperclip.copy(str(g)) dumbbbbbbb
 
-# g.view()
+#g.view()
