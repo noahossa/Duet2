@@ -49,16 +49,21 @@ Python scripts and examples for generating GCode according to
 ## Steps
 
 Install [pandas](https://pandas.pydata.org/)
-'''bash
+```bash
 pip install pandas
-'''
+```
 
 Install [numpy/matplotlib](https://numpy.org/install/) and reference [tutorial](https://realpython.com/numpy-tutorial/)
-''''bash
+``` bash
 pip install numpy matplotlib
-''''
+```
 
 Install [pyperclip](https://pypi.org/project/pyperclip/)
-'''bash
+``` bash
 pip install pyperclip
-'''
+```
+
+Install [mecode](https://reprap.org/wiki/Mecode)
+``` bash
+pip install mecode
+```
