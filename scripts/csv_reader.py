@@ -8,6 +8,7 @@ import pyperclip as pc
 import mecode
 from mecode import G
 import pathlib
+import os
 
 
 # file_name = input("filename:")          #allows user to input a filename to pull the csv from. Have to be careful at what level the working directory is located currently, as users have to prepend the file path from the terminal to their file name
@@ -20,7 +21,10 @@ num_rows = len(hole_pos[:,1])
 num_columns = len(hole_pos[1,:])
 
 #instantiate the gcode object g
-g = G()
+#output constructed to a file in our repo
+script_directory = os.path.dirname(os.path.abspath(__file__))
+output_directory = os.path.join(script_directory, 'holes.gcode') #already a string
+g = G(outfile = output_directory)
 
 #add common gcode commands that need to be at the beginning of all files
     #g.home()
@@ -47,8 +51,7 @@ for i in range(num_rows - 1):
             #DRILL COMMANDS must be placed here!!!
 
 
-#output constructed to a file in our repo
 
-script_directory = pathlib.Path().parent.absolute() #get current working directory
 
-g = G(outfile= str(script_directory))
+
+

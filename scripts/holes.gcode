@@ -1,0 +1,16 @@
+G91 ;relative
+G90 ;absolute
+G1 Z478.910000
+G91 ;relative
+G90 ;absolute
+G1 Y20.000000
+G91 ;relative
+G90 ;absolute
+G1 X90.000000
+G91 ;relative
+G90 ;absolute
+G1 Y20.000000
+G91 ;relative
+G90 ;absolute
+G1 X-90.000000
+G91 ;relative
