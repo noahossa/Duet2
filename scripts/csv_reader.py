@@ -10,9 +10,52 @@ from mecode import G
 import pathlib
 import os
 
+#Define parameters to choose from (eventually make these class attributes)
+cross_section_types = ['square','circle']    #should implement function get_cross_section() to determine section based on user input
+operation_types = ['sim', 'real']            #define sim and real parameters to choose between oyutputting "dry" drilling operations (without plunges for simulation) and actual operations (with plunges for cutting) respectively
+num_chucks = 2 #default number of chucks
+chuck_height = 70                         #need to fix this to be whatever height the chuck is above the CENTER of the stock (will perform y-hop calcs based on stock dia to keep this number as a fixed, low-level parameter)
+
+#Set STATIC params that the user (or developer) shouldnt change a lot after initial tuning (LITERALLY pulling these numbers out of my ass rn, we need to test these)
+y_index_rate = 1000         #set some value for the speed of y-plunge when indexing a hole position to avoid "walking"
+y_index_depth = 0.5         #set depth of hole index plunge before the bit backs out and drills the acrual hole at speed
+y_index_retract = y_index_depth + 0.2 #set retraction after y-plunge before actual drilling operation
+
+y_drill_rate = 5000          #set rate of actual drilling operation
+y_clearance_height  = 5      #set some arbitrary clearance increment for y-retracts to be offset above features that we want to avoids
+y_chuck_retract = chuck_height + y_clearance_height
+
+#Statis define user input variables (default units = mm)
+file_name = 'test.csv'       #to be replaced by below input (this is the name of the input gcode file)
+cross_section = 'square'      #to be replaced by below input (this is the cross section of the stock)
+stock_diam = 28.7             #replace with "None" to work with below dynamic inputs (this is either the circular diameter or flat to flat measurement of the stock)
+stock_length = 1000           #to be replaced by below input (this is the length of the stock for setting end points in the gcode? this might not be necessary)
+chuck_pos = [200, 800]        # to be replaced by "[]" and be populated by below for loop input (this is an array of chuck positions measured absolute from the edge of the stock)
+drill_depth = 4               # to be replaced by below input (this is the depth to drill on each face)
+
+#Dynamic user inputs (uncomment after replacing static)
 
 # file_name = input("filename:")          #allows user to input a filename to pull the csv from. Have to be careful at what level the working directory is located currently, as users have to prepend the file path from the terminal to their file name
-hole_data = pd.read_csv('test.csv')      #reads file at the work directory level aka the level the terminal is being run at
+# cross_section = input("cross section type:")
+
+# if cross_section == 'square':                                            #dynamically adjust user input string depending on cross section
+#     diam_input_string = 'Enter square flat-to-flat distance (mm):' 
+#     else:
+#          diam_input_string = 'Enter outer diameter (mm):'   
+# stock_diam = input(diam_input_string)
+
+# stock_length = input('Enter length of stock')
+
+# for i in num_chucks:                                                                 #dynamically build array of chuck positions
+#     chuck_input_string = 'Enter absolute distance of chuck {} (mm):'.format(i)
+#     chuck_pos[i] = input(chuck_input_string)
+
+#drill_depth = input('Enter depth to drill (mm):'
+
+
+#Set Dynamic Params based on user inputs and STATIC params
+
+hole_data = pd.read_csv(file_name)      #reads file at the work directory level aka the level the terminal is being run at
 # hole_data = pd.read_csv(file_name)
 hole_pos = np.array(hole_data)          #append csv to remove column labels
 # print(hole_pos)
