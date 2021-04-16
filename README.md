@@ -16,6 +16,7 @@ Repository for custom Duet configuration files and scripts
 * Need to implement logic to avoid chucks (need param to input chuck width)
 * Clean up comments and update readme
 * Better picture of tube CNC axes
+* Add auxillary functions like relay control
 
 
 * CSV: array of Z positions for hole "sets" AND X positions for each hole in that set (with respect to the chosen origin)
