@@ -10,17 +10,13 @@ Repository for custom Duet configuration files and scripts
 * export gcode to clipboard and past in text doc, save as gcode file and upload to [Duet Web Control (DWC)](https://duet3d.dozuki.com/Wiki/Duet_Web_Control_Manual), jobs tab
 * export dry run gcode and test
 * export drill run of gcode and run
-### Inputs
-* will we have a UI? 
-* cross section shape
-* cross section dia or flat-to-flat
-* Assume origin at 12 o'clock pos end of stock (printout of this as a warning assumption?)
-    *  USE DISCRETION for square stock to place origin on face such that X-axis rotation is limited
-* Length of stock
-* chuck positions 
-* specify drill or dry-run gcode export? (do everything but the Y-plunge), go to all holes and touch surface (marker bit in cnc)
-* plunge depth 
-* all exclusions (Y and for chucks) will be set based on lower level function params (can make these inputs later but not priority)
+### To-dos
+* Find better method for excluding holes than 666
+* Look at ways to add comments into exported gcode using mecode (make it more readible)
+* Need to implement logic to avoid chucks (need param to input chuck width)
+* Clean up comments and update readme
+* Better picture of tube CNC axes
+
 
 * CSV: array of Z positions for hole "sets" AND X positions for each hole in that set (with respect to the chosen origin)
     * Z5.351, X90, X-90 
@@ -56,11 +52,6 @@ pip install pandas
 Install [numpy/matplotlib](https://numpy.org/install/) and reference [tutorial](https://realpython.com/numpy-tutorial/)
 ``` bash
 pip install numpy matplotlib
-```
-
-Install [pyperclip](https://pypi.org/project/pyperclip/)
-``` bash
-pip install pyperclip
 ```
 
 Install [mecode](https://reprap.org/wiki/Mecode)
