@@ -225,8 +225,6 @@ script_directory = os.path.dirname(os.path.abspath(__file__))                   
 output_directory = os.path.join(script_directory,'holes.gcode')                      #Append file name to working directory path
 g = G(outfile = output_directory)                                                    #Instantiate MeCode object
 
-# g.move(z=0)
-
 test = Gcodegen()                                                                    
 test.inputvar()                                                                     #run dynamic user inputs
 test.codeGen()    
