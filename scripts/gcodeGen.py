@@ -19,11 +19,9 @@ Contributors:
 """
 
 import csv
-import argparse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import pyperclip as pc
 import mecode
 from mecode import G
 import pathlib
