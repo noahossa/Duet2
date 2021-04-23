@@ -66,7 +66,7 @@ class Gcodegen:
         print('\nEnter the cross section type: Enter 0 for \'square\' and 1 for \'circle\'')
         choice_0 = 0
         choice_0 = input()
-        if (choice_0 == 0):
+        if (choice_0 == '0'):
             self.cross_section = 'square'
         else:
             self.cross_section = 'circle'
@@ -76,7 +76,7 @@ class Gcodegen:
         print('\nEnter the operation type: Enter 0 for \'dry-run\' and 1 for \'cut\'')
         choice_1 = 0
         choice_1 = input()
-        if (choice_1 == 0):
+        if (choice_1 == '0'):
             self.operation_type = 'dry run'
         else:
             self.operation_type = 'cut'
@@ -161,7 +161,7 @@ class Gcodegen:
         #dry-run y operations
 
         g.feed(self.y_move_rate)
-        g.avs_move(y=self.y_dry_height)
+        g.abs_move(y=self.y_dry_height)
         g.abs_move(y=self.chuck_height + self.y_clearance_height) 
 
     def y_operations(self):
@@ -199,35 +199,38 @@ class Gcodegen:
         for i in range(num_rows):
             for j in range(num_columns):
         
-                if hole_pos[i,j] > 360:                                            #do not generate G-code for unwanted angles
+                if hole_pos[i,j] == 666:                                            #do not generate G-code for unwanted angles
                     continue
-                elif i == 0 and j == 0:                       
+                elif i == 0 and j == 0:
+                    # print(i)
+                    # print(j)                       
                     g.feed(z_move_rate)
                     g.abs_move(z=hole_pos[i,0])    
                 elif i != 0 and j == 0:
                     rel_pos = np.subtract(hole_pos[i,0],hole_pos[0,0])
                     g.feed(z_move_rate)
                     g.move(z=rel_pos)      
-                else:                           
+                else:                         
                     if hole_pos[i,j] == 0:    
                         g.feed(y_move_rate)
                         g.abs_move(y=stock_diam)
-                        self.y_index()
-                        self.y_drill()
+                        self.y_operations()
+                        
                     else:                 
                         g.feed(y_move_rate)
                         g.abs_move(y=stock_diam)             
                         g.feed(x_move_rate)
                         g.abs_move(x=hole_pos[i,j])  
-                        self.y_index()
-                        self.y_drill() 
+                        self.y_operations()
         
 script_directory = os.path.dirname(os.path.abspath(__file__))                        #Find the users working directory
 output_directory = os.path.join(script_directory,'holes.gcode')                      #Append file name to working directory path
 g = G(outfile = output_directory)                                                    #Instantiate MeCode object
 
+# g.move(z=0)
+
 test = Gcodegen()                                                                    
-#test.inputvar()                                                                     #run dynamic user inputs
+test.inputvar()                                                                     #run dynamic user inputs
 test.codeGen()    
 print('\nYour G-Code has been generated here: \n{}'.format(output_directory))  
 
