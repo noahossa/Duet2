@@ -36,7 +36,7 @@ class Gcodegen(G):
         :param options: argument inputs, see arguement_parser
         '''
         #Define attributes as static parameters for export tuning (default units: mm)
-        self.y_index_rate = 1000                                                                #set speed of y-plunge when indexing a hole position to avoid "walking"
+        self.y_index_rate = 500                                                                #set speed of y-plunge when indexing a hole position to avoid "walking"
         self.y_index_depth = 0.5                                                                #set depth of hole index before the bit backs out and performs the drill plunge
         self.y_index_retract = self.y_index_depth + 0.2                                         #set retraction after y-plunge before drill plunging
         self.y_dry_height = 3                                                                   #height above the stock to jog to during dry-run operations
@@ -45,11 +45,11 @@ class Gcodegen(G):
         self.chuck_height = 70                                                                  #Height of the chuck measured from the center axis of rotation of the stock
        
         # Define movement rates
-        self.x_move_rate = 200
-        self.y_drill_rate = 50                                                                  #Plunge rate of the actual drilling operation
-        self.z_move_rate = 500
+        self.x_move_rate = 2000
+        self.y_drill_rate = 200                                                                  #Plunge rate of the actual drilling operation
+        self.z_move_rate = 1500
         self.y_retract_rate = 85
-        self.y_move_rate = 100
+        self.y_move_rate = 200
 
         # Input Args
         self.file_name = str(options.input_file)  
@@ -139,6 +139,14 @@ class Gcodegen(G):
         else:
             self.y_dry()
 
+    def set_power(self, x_pow=100, y_pow=100, z_pow=100):
+        '''
+        Method to set the percentage of the power limit for each axis
+        :param x_pow: int for the x power percentage (ex: 100, 50)
+        :param y_pow: int for the y power percentage
+        :param z_pow: int for the z power percentage
+        '''
+        self.write('M913 X{} Y{} Z{};'.format(x_pow, y_pow, z_pow))
     def codeGen(self):
         #Generate G-Code
 
@@ -159,6 +167,8 @@ class Gcodegen(G):
         x_move_rate = self.x_move_rate
         self.error_checker()
 
+        self.feed(y_move_rate)
+        self.abs_move(y=self.chuck_height + self.y_clearance_height)
         for i in range(num_rows):
             for j in range(num_columns):
         
@@ -181,9 +191,12 @@ class Gcodegen(G):
                         
                     else:                 
                         self.feed(y_move_rate)
-                        self.abs_move(y=stock_diam)             
+                        self.abs_move(y=stock_diam)  
+
+                        self.set_power(x_pow=100)           
                         self.feed(x_move_rate)
                         self.abs_move(x=hole_pos[i,j])  
+                        self.set_power(x_pow=40)  
                         self.y_operations()
         
 def argument_parser():
