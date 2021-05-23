@@ -208,8 +208,6 @@ def main():
     options = argument_parser()
     script_directory = os.path.dirname(os.path.abspath(__file__))                        #Find the users working directory
     output_directory = os.path.join(script_directory,'holes.gcode')                      #Append file name to working directory path
-
-    g = G(outfile = output_directory) #Instantiate MeCode object
     
     test = Gcodegen(options, outfile = output_directory)                                                                    
     # test.inputvar()                                                                     #run dynamic user inputs
