@@ -27,8 +27,11 @@ from mecode import G
 import pathlib
 import os
 from argparse import ArgumentParser
-class Gcodegen:
-    def __init__(self, options):
+
+class Gcodegen(G):
+    def __init__(self, options, **kwargs):
+        super().__init__(**kwargs)
+
         '''
         :param options: argument inputs, see arguement_parser
         '''
@@ -86,17 +89,13 @@ class Gcodegen:
         length = float(self.stock_length)
 
         for i in range(num_rows):  
-            if abs(hole_pos[i,0] - chuck_pos[0]) < avoid_threshold:
-                # print(abs(hole_pos[i,0] - chuck_pos[0]))
-                print('\nWARNING: Cut paths intersect with chuck {} position at z = {}! Move chucks before cutting!'.format(1,hole_pos[i,0]))
-                exit(-1)
-            elif  abs(hole_pos[i,1] - chuck_pos[1]) < avoid_threshold:
-                # print(abs(hole_pos[i,0] - chuck_pos[1]))
-                print('\nWARNING: Cut paths intersect with chuck {} position at z = {}! Move chucks before cutting!'.format(2,hole_pos[i,0]))
-                exit(-1)
-            elif hole_pos[i,0] > length:
+            for j in range(len(chuck_pos)):
+                if abs(hole_pos[i,0] - chuck_pos[j]) < avoid_threshold:
+                    # print(abs(hole_pos[i,0] - chuck_pos[0]))
+                    print('\nWARNING: Cut paths intersect with chuck {} position at z = {}! Move chucks before cutting!'.format(j+1,hole_pos[i,0]))
+
+            if hole_pos[i,0] > length:
                 print('\nWARNING: Cut paths at z = {} extend beyond stock length! Check input file.'.format(hole_pos[i,0]))
-                exit(-1)
             else:
                 print()
         print("- - - Check Complete - - ")
@@ -104,12 +103,12 @@ class Gcodegen:
     def y_index(self):
         # index y-operations
 
-        g.feed(self.y_move_rate)
-        g.abs_move(y=self.y_clearance_height)
-        g.feed(self.y_index_rate)
-        g.abs_move(y=-self.y_index_depth)
-        g.feed(self.y_retract_rate)
-        g.abs_move(y=self.y_index_retract)
+        self.feed(self.y_move_rate)
+        self.abs_move(y=self.y_clearance_height)
+        self.feed(self.y_index_rate)
+        self.abs_move(y=-self.y_index_depth)
+        self.feed(self.y_retract_rate)
+        self.abs_move(y=self.y_index_retract)
 
     def y_drill(self):
         #plunge y operations
@@ -187,7 +186,7 @@ class Gcodegen:
                         self.abs_move(x=hole_pos[i,j])  
                         self.y_operations()
         
-def arguement_parser():
+def argument_parser():
     '''
     Method to parse the input args
     :return: options
@@ -195,10 +194,10 @@ def arguement_parser():
     parser = ArgumentParser()
     parser.add_argument('--cross_section', type=str,choices=['square', 'circle'] ,default='square', help='tube cross section shape')
     parser.add_argument('--operation_type', type=str,choices=['cut', 'dry_run', 'print'] ,default='dry_run', help='operation type')
-    parser.add_argument('--stock_diam', type=float, default=None, help='diameter of the stock (mm)')
-    parser.add_argument('--stock_len', type=float, default=None, help='length of the stock (mm)')
-    parser.add_argument('--chuck_pos', type=str, default=None, help='chuck positions, comma separated (absolute from origin in mm). Ex: "240,480,..." ')
-    parser.add_argument('--drill_depth', type=float, default=None, help='drilling depth from outer radius (mm)')
+    parser.add_argument('--stock_diam', type=float, default=27.8, help='diameter of the stock (mm)')
+    parser.add_argument('--stock_len', type=float, default=1775, help='length of the stock (mm)')
+    parser.add_argument('--chuck_pos', type=str, default="400,700", help='chuck positions, must be inputted closest to farthest: comma separated (absolute from origin in mm). Ex: "240,480,..." ')
+    parser.add_argument('--drill_depth', type=float, default=5, help='drilling depth from outer radius (mm)')
 
     parser.add_argument('--input_file', type=str, default='test.csv', help='hole drilling input file')
     parser.add_argument('--output_file', type=str, default='holes.gcode', help='output file name')
@@ -206,16 +205,16 @@ def arguement_parser():
     return parser.parse_args()
 
 def main():
-    options = arguement_parser()
+    options = argument_parser()
     script_directory = os.path.dirname(os.path.abspath(__file__))                        #Find the users working directory
     output_directory = os.path.join(script_directory,'holes.gcode')                      #Append file name to working directory path
-    g = G(outfile = output_directory)                                                    #Instantiate MeCode object
 
-    test = Gcodegen(options)                                                                    
+    g = G(outfile = output_directory) #Instantiate MeCode object
+    
+    test = Gcodegen(options, outfile = output_directory)                                                                    
     # test.inputvar()                                                                     #run dynamic user inputs
     test.codeGen()    
     print('\nYour G-Code has been generated here: \n{}'.format(output_directory))  
-
 
 if __name__ == '__main__':
     main()
