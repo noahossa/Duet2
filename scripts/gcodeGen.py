@@ -2,7 +2,7 @@
 TubeCNC G-Code Generator
 
 This is a class to generate G-Code for a custom 3-axis tube-cutting CNC designed by NUAV.
-The current version (4/21/21) is capable of generating G-Code for hole drilling of square cross-section tubes
+The current version (5/22/21) is capable of generating G-Code for hole drilling of square cross-section tubes
 
 To do:
 -Implement circular cross section csv file format
@@ -96,7 +96,7 @@ class Gcodegen(G):
 
             if hole_pos[i,0] > length:
                 print('\nWARNING: Cut paths at z = {} extend beyond stock length! Check input file.'.format(hole_pos[i,0]))
-            else:
+            else: 
                 print()
         print("- - - Check Complete - - ")
 
