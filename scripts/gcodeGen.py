@@ -36,7 +36,7 @@ class Gcodegen(G):
         :param options: argument inputs, see arguement_parser
         '''
         #Define attributes as static parameters for export tuning (default units: mm)
-        self.y_index_rate = 500                                                                #set speed of y-plunge when indexing a hole position to avoid "walking"
+        self.y_index_rate = 75                                                                #set speed of y-plunge when indexing a hole position to avoid "walking"
         self.y_index_depth = 0.5                                                                #set depth of hole index before the bit backs out and performs the drill plunge
         self.y_index_retract = self.y_index_depth + 0.2                                         #set retraction after y-plunge before drill plunging
         self.y_dry_height = 3                                                                   #height above the stock to jog to during dry-run operations
@@ -79,7 +79,7 @@ class Gcodegen(G):
             print("WARNING: SPACES IN CHUCK POSITIONS")
             exit(-1)
 
-        chuck_pos = self.chuck_data.split(',')                                      #transofrm chuck_pos from input as a list to an array
+        chuck_pos = self.chuck_data.split(',')                                      #transform chuck_pos from input as a list to an array
         for i in range(0, len(chuck_pos)):                                          #convert chuck string input to array of ints
             chuck_pos[i] = float(chuck_pos[i])
         
@@ -139,7 +139,8 @@ class Gcodegen(G):
         else:
             self.y_dry()
 
-    def set_power(self, x_pow=100, y_pow=100, z_pow=100):
+    #TODO: This is kinda of a bandaid for a bigger problem. Only to be used for debug purposes if motors start overheating
+    def set_power(self, x_pow=100, y_pow=100, z_pow=100):                           
         '''
         Method to set the percentage of the power limit for each axis
         :param x_pow: int for the x power percentage (ex: 100, 50)
@@ -147,6 +148,11 @@ class Gcodegen(G):
         :param z_pow: int for the z power percentage
         '''
         self.write('M913 X{} Y{} Z{};'.format(x_pow, y_pow, z_pow))
+
+    def y_retract(self):
+        self.feed(self.y_move_rate)
+        self.abs_move(y=self.chuck_height + self.y_clearance_height)
+
     def codeGen(self):
         #Generate G-Code
 
@@ -154,11 +160,10 @@ class Gcodegen(G):
         hole_pos = np.array(hole_data)                                              #append csv to array format  
         stock_diam = float(self.stock_diam)                                           #convert stock_diam input to int        
 
-        chuck_pos = self.chuck_data.split(',')                                      #transofrm chuck_pos from input as a list to an array
+        chuck_pos = self.chuck_data.split(',')                                      #transform chuck_pos from input as a list to an array
         for i in range(0, len(chuck_pos)):                                          #convert chuck string input to array of ints
             chuck_pos[i] = float(chuck_pos[i])
     
-
         num_rows = len(hole_pos[:,1])
         num_columns = len(hole_pos[1,:])
         y_index_depth = self.y_index_depth
@@ -167,8 +172,7 @@ class Gcodegen(G):
         x_move_rate = self.x_move_rate
         self.error_checker()
 
-        self.feed(y_move_rate)
-        self.abs_move(y=self.chuck_height + self.y_clearance_height)
+        self.y_retract()
         for i in range(num_rows):
             for j in range(num_columns):
         
@@ -220,7 +224,7 @@ def argument_parser():
 def main():
     options = argument_parser()
     script_directory = os.path.dirname(os.path.abspath(__file__))                        #Find the users working directory
-    output_directory = os.path.join(script_directory,'holes.gcode')                      #Append file name to working directory path
+    output_directory = os.path.join(script_directory,options.output_file)                      #Append file name to working directory path
 
     g = G(outfile = output_directory) #Instantiate MeCode object
     
