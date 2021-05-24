@@ -62,7 +62,6 @@ class Gcodegen(G):
         self.drill_depth = float(options.drill_depth)       
 
         # Calulated Vals
-        self.y_chuck_retract = self.chuck_height - self.stock_diam/2 + self.y_clearance_height  #calculate y-retraction dynamically as a function of cross section
 
     def error_checker(self):    
         """
@@ -172,7 +171,7 @@ class Gcodegen(G):
         x_move_rate = self.x_move_rate
         self.error_checker()
 
-        self.y_retract()
+        self.y_retract()                                                            #Critical: retract to clearance height above chucks before any z move to avoid collisions
         for i in range(num_rows):
             for j in range(num_columns):
         
