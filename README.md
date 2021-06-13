@@ -44,18 +44,7 @@ Python scripts and examples for generating GCode according to
 * [argparse](https://prod.liveshare.vsengsaas.visualstudio.com/join?6DCFD36A06689E096F402D0AF10C7EC8E8DD)
 
 ## Steps
-
-Install [pandas](https://pandas.pydata.org/)
-```bash
-pip install pandas
+Install python packages: 
 ```
-
-Install [numpy/matplotlib](https://numpy.org/install/) and reference [tutorial](https://realpython.com/numpy-tutorial/)
-``` bash
-pip install numpy matplotlib
-```
-
-Install [mecode](https://reprap.org/wiki/Mecode)
-``` bash
-pip install mecode
+pip3 install -r requirements.txt
 ```

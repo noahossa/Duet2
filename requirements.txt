@@ -1,0 +1,5 @@
+pandas
+matplotlib
+mecode
+numpy
+pathlib
