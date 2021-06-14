@@ -91,11 +91,10 @@ class Gcodegen(G):
         for i in range(num_rows):  
             for j in range(len(chuck_pos)):
                 if abs(hole_pos[i,0] - chuck_pos[j]) < avoid_threshold:
-                    # print(abs(hole_pos[i,0] - chuck_pos[0]))
-                    print('\nWARNING: Cut paths intersect with chuck {} position at z = {}! Move chucks before cutting!'.format(j+1,hole_pos[i,0]))
+                    print(f'\nWARNING: Cut paths intersect with chuck {j+1} position at z = {hole_pos[i,0]}! Move chucks before cutting!')
 
             if hole_pos[i,0] > length:
-                print('\nWARNING: Cut paths at z = {} extend beyond stock length! Check input file.'.format(hole_pos[i,0]))
+                print(f'\nWARNING: Cut paths at z = {hole_pos[i,0]} extend beyond stock length! Check input file.')
             else: 
                 print()
         print("- - - Check Complete - - ")
@@ -112,7 +111,7 @@ class Gcodegen(G):
 
     def y_drill(self):
         #plunge y operations
-        drill_depth = float(self.drill_depth)                                             #convert drill_depth input to int
+        drill_depth = float(self.drill_depth)                                              #convert drill_depth input to int
 
         self.feed(self.y_retract_rate)
         self.abs_move(y=self.y_index_retract)
@@ -127,15 +126,27 @@ class Gcodegen(G):
         self.abs_move(y=self.y_dry_height)
         self.abs_move(y=self.chuck_height + self.y_clearance_height) 
 
+    def y_mark(self):
+        #Draw a marker line at a given cut length
+        self.feed(self.y_move_rate)
+        self.abs_move(y=self.y_clearance_height)
+        self.feed(self.y_index_rate)
+        self.abs_move(y=0)
+        self.abs_move(x=360)  
+
+
     def y_operations(self):
         """
         Control y G-Code generation:
         - for 'cut' operations, execute cutting methods
         - for 'dry-run' operations, jog to hole position but do not plunge 
+        - for 'mark' operations, jog to hole position, stop at surface, then draw a line around the stock
         """
         if self.operation_type == 'cut':
             self.y_index()
             self.y_drill()
+        elif self.operation_type == 'mark':
+            self.y_mark()
         else:
             self.y_dry()
 
@@ -165,8 +176,6 @@ class Gcodegen(G):
                 if hole_pos[i,j] == 666:                                            #do not generate G-code for unwanted angles
                     continue
                 elif i == 0 and j == 0:
-                    # print(i)
-                    # print(j)                       
                     self.feed(z_move_rate)
                     self.abs_move(z=hole_pos[i,0])    
                 elif i != 0 and j == 0:
@@ -174,7 +183,7 @@ class Gcodegen(G):
                     self.feed(z_move_rate)
                     self.move(z=rel_pos)      
                 else:                         
-                    if hole_pos[i,j] == 0:    
+                    if hole_pos[i,j] == 0:  
                         self.feed(y_move_rate)
                         self.abs_move(y=stock_diam)
                         self.y_operations()
