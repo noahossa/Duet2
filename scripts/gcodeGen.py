@@ -36,7 +36,7 @@ class Gcodegen(G):
         :param options: argument inputs, see arguement_parser
         '''
         #Define attributes as static parameters for export tuning (default units: mm)
-        self.y_index_rate = 75                                                                #set speed of y-plunge when indexing a hole position to avoid "walking"
+        self.y_index_rate = 25                                                                #set speed of y-plunge when indexing a hole position to avoid "walking"
         self.y_index_depth = 0.5                                                                #set depth of hole index before the bit backs out and performs the drill plunge
         self.y_index_retract = self.y_index_depth + 0.2                                         #set retraction after y-plunge before drill plunging
         self.y_dry_height = 3                                                                   #height above the stock to jog to during dry-run operations
@@ -46,10 +46,10 @@ class Gcodegen(G):
        
         # Define movement rates
         self.x_move_rate = 2000
-        self.y_drill_rate = 200                                                                  #Plunge rate of the actual drilling operation
-        self.z_move_rate = 1500
-        self.y_retract_rate = 85
-        self.y_move_rate = 200
+        self.y_drill_rate = 40                                                                  #Plunge rate of the actual drilling operation
+        self.z_move_rate = 2500
+        self.y_retract_rate = 150
+        self.y_move_rate = 350
 
         # Input Args
         self.file_name = str(options.input_file)  
@@ -117,6 +117,7 @@ class Gcodegen(G):
         self.abs_move(y=self.y_index_retract)
         self.feed(self.y_drill_rate)
         self.abs_move(y=-drill_depth)
+        self.feed(self.y_retract_rate)
         self.abs_move(y=self.chuck_height + self.y_clearance_height)                       #Critical: retract to clearance height above chucks before next z move to avoid collisions
         
     def y_dry(self):
@@ -183,9 +184,9 @@ class Gcodegen(G):
                     self.feed(z_move_rate)
                     self.abs_move(z=hole_pos[i,0])    
                 elif i != 0 and j == 0:
-                    rel_pos = np.subtract(hole_pos[i,0],hole_pos[0,0])
+                    rel_pos = hole_pos[i,0]
                     self.feed(z_move_rate)
-                    self.move(z=rel_pos)      
+                    self.abs_move(z=rel_pos)      
                 else:                         
                     if hole_pos[i,j] == 0:    
                         self.feed(y_move_rate)
