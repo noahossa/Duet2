@@ -99,6 +99,40 @@ class Gcodegen(G):
                 print()
         print("- - - Check Complete - - ")
 
+
+    def z_chuck_pos_check(self, row_index=None, first=False):
+        """
+        Checks for the position of the chucks and sees if it is between two z positions. Then it dynamically adjusts the y height based on if a chuck is present between the two z positions or not.
+        - it should be called before any z axis movements
+        - avoid striking any chucks
+        """
+        hole_data = pd.read_csv(self.file_name)   
+        hole_pos = np.array(hole_data)
+
+        chuck_pos = self.chuck_data.split(',')                                      #transform chuck_pos from input as a list to an array
+        for i in range(0, len(chuck_pos)):                                          #convert chuck string input to array of ints
+            chuck_pos[i] = float(chuck_pos[i])
+
+        num_rows = len(hole_pos[:,1])
+        avoid_threshold = self.y_clearance_height + self.z_chuck_clearance
+
+        holes_left = abs(len(range(row_index+1)) - num_rows)                        #Establishes the number holes left that must be generated.
+
+        if holes_left == 0 or first == True:                                                         #Checks for the last hole condition to ensure there isn't any indexing error if it tries to compare to future hole
+            self.feed(self.y_move_rate)
+            self.abs_move(y=float(self.stock_diam))
+        else:
+            for i in range(len(chuck_pos)):
+                chuck_z_length_upper_bound = chuck_pos[i] + avoid_threshold/2
+                chuck_z_length_lower_bound = chuck_pos[i] - avoid_threshold/2
+                if hole_pos[row_index,0] < chuck_z_length_lower_bound and hole_pos[row_index+1,0] > chuck_z_length_upper_bound:             #Checks if the first hole's z position is less than the z position of the closest side of the chuck and checks if the second hole's z position is greater than the far side of the chuck
+                    self.feed(self.y_retract_rate)
+                    self.abs_move(y=self.chuck_height + self.y_clearance_height)
+                else:                                                               #If the drill bit does not travel over a chuck just move at stock diameter y height
+                    self.feed(self.y_move_rate)
+                    self.abs_move(y=float(self.stock_diam))
+
+
     def y_index(self):
         # index y-operations
 
@@ -117,15 +151,12 @@ class Gcodegen(G):
         self.abs_move(y=self.y_index_retract)
         self.feed(self.y_drill_rate)
         self.abs_move(y=-drill_depth)
-        self.feed(self.y_retract_rate)
-        self.abs_move(y=self.chuck_height + self.y_clearance_height)                       #Critical: retract to clearance height above chucks before next z move to avoid collisions
         
     def y_dry(self):
         #dry-run y operations
 
         self.feed(self.y_move_rate)
         self.abs_move(y=self.y_dry_height)
-        self.abs_move(y=self.chuck_height + self.y_clearance_height) 
 
     def y_operations(self):
         """
@@ -172,7 +203,8 @@ class Gcodegen(G):
         x_move_rate = self.x_move_rate
         self.error_checker()
 
-        self.y_retract()                                                            #Critical: retract to clearance height above chucks before any z move to avoid collisions
+        self.z_chuck_pos_check(row_index=0, first=True)
+        #self.y_retract()                                                            #Critical: retract to clearance height above chucks before any z move to avoid collisions
         for i in range(num_rows):
             for j in range(num_columns):
         
@@ -192,6 +224,7 @@ class Gcodegen(G):
                         self.feed(y_move_rate)
                         self.abs_move(y=stock_diam)
                         self.y_operations()
+                        self.z_chuck_pos_check(row_index=i)
                         
                     else:                 
                         self.feed(y_move_rate)
@@ -202,6 +235,7 @@ class Gcodegen(G):
                         self.abs_move(x=hole_pos[i,j])  
                         self.set_power(x_pow=40)  
                         self.y_operations()
+                        self.z_chuck_pos_check(row_index=i)
         
 def argument_parser():
     '''
