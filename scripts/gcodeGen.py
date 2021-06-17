@@ -128,6 +128,7 @@ class Gcodegen(G):
                 if hole_pos[row_index,0] < chuck_z_length_lower_bound and hole_pos[row_index+1,0] > chuck_z_length_upper_bound:             #Checks if the first hole's z position is less than the z position of the closest side of the chuck and checks if the second hole's z position is greater than the far side of the chuck
                     self.feed(self.y_retract_rate)
                     self.abs_move(y=self.chuck_height + self.y_clearance_height)
+                    break
                 else:                                                               #If the drill bit does not travel over a chuck just move at stock diameter y height
                     self.feed(self.y_move_rate)
                     self.abs_move(y=float(self.stock_diam))
@@ -157,6 +158,7 @@ class Gcodegen(G):
 
         self.feed(self.y_move_rate)
         self.abs_move(y=self.y_dry_height)
+        self.dwell(10000)
 
     def y_operations(self):
         """
@@ -210,9 +212,7 @@ class Gcodegen(G):
         
                 if hole_pos[i,j] == 666:                                            #do not generate G-code for unwanted angles
                     continue
-                elif i == 0 and j == 0:
-                    # print(i)
-                    # print(j)                       
+                elif i == 0 and j == 0:                      
                     self.feed(z_move_rate)
                     self.abs_move(z=hole_pos[i,0])    
                 elif i != 0 and j == 0:
